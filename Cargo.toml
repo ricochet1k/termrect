@@ -1,0 +1,10 @@
+[package]
+name = "termrect"
+version = "0.1.0"
+authors = ["Matt Peterson <ricochet1k@gmail.com>"]
+
+[dependencies]
+bitfield = "0.13"
+termion = "^1.5.1"
+unicode-width = "~0"
+
