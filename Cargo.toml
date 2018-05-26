@@ -12,4 +12,3 @@ readme = "README.md"
 bitfield = "0.13"
 termion = "^1.5.1"
 unicode-width = "~0"
-

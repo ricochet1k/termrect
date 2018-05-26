@@ -1,6 +1,6 @@
-use line::Line;
-use style::Style;
 use styledtext::StyledText;
+use style::Style;
+use line::Line;
 
 use std::iter::repeat;
 

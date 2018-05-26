@@ -1,6 +1,5 @@
 use std;
 use termion;
-
 use std::io::Write;
 use style::Style;
 use styledtext::StyledText;

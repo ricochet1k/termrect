@@ -150,5 +150,4 @@ mod test {
         slice_test("ＱＲＳ12", .., "ＱＲＳ12", 8);
         slice_test("ｱｲｳ1234", .., "ｱｲｳ1234", 7); // 3 single-width chars
     }
-
 }
