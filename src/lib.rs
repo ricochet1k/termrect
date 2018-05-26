@@ -5,16 +5,15 @@ extern crate bitfield;
 extern crate termion;
 extern crate unicode_width;
 
-pub mod termrect;
-pub mod terminal;
 pub mod line;
 pub mod style;
 pub mod styledtext;
+pub mod terminal;
+pub mod termrect;
 
-pub use termrect::{TermRect, PaintableWidget, RawPaintable, HasSize, HasTermRect};
+pub use style::{Color, Style, StyleAttr};
 pub use terminal::Terminal;
-pub use style::{Style, Color, StyleAttr};
-
+pub use termrect::{HasSize, HasTermRect, PaintableWidget, RawPaintable, TermRect};
 
 #[cfg(test)]
 mod tests {

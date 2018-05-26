@@ -1,10 +1,8 @@
-
-use styledtext::StyledText;
-use style::Style;
 use line::Line;
+use style::Style;
+use styledtext::StyledText;
 
 use std::iter::repeat;
-
 
 #[derive(Debug)]
 pub struct TermRect {
@@ -94,4 +92,3 @@ impl<T: HasTermRect> PaintableWidget for T {
         sb.draw_delta_into(target, pos)
     }
 }
-
