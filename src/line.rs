@@ -30,13 +30,15 @@ impl Line {
         let txt_end = x + txt.width;
 
         let mut t_column = 0;
+        let mut t_end = 0;
         let mut start_found = false;
         let mut start_sliced = None;
         let mut start_index = 0;
         let mut end_index = self.texts.len()-1;
         let mut end_sliced = None;
         for (i, t) in self.texts.iter().enumerate() {
-            let t_end = t_column + t.width;
+            t_column = t_end;
+            t_end = t_column + t.width;
             if !start_found {
                 if t_end > x {
                     start_index = i;
@@ -55,25 +57,22 @@ impl Line {
                     break;
                 }
             }
-            t_column = t_end;
         }
 
         // start is out of bounds
         if !start_found { return }
 
-        let repl = [start_sliced, Some(txt.clone()), end_sliced];
+        let text = if end_index == self.texts.len() - 1 && txt_end > t_end {
+            txt.slice(..(txt.width - (txt_end - t_end)) as usize)
+        } else {
+            txt.clone()
+        };
+
+
+        let repl = [start_sliced, Some(text), end_sliced];
         let repl = repl.iter().flatten().cloned();
 
-    //if *txt.text == "x" {
-        //println!("\n\rLine.draw_text_at {}, {:?}: {}..{}", x, txt.text, start_index, end_index);
-        //println!("\rLine.draw_text_at before: {:?}", self.texts);
-    //}
         self.texts.splice(start_index..end_index+1, repl);
-    //if *txt.text == "x" {
-        //println!("\rLine.draw_text_at after: {:?}", self.texts);
-    //}
-
-        //self.texts = new_texts;
     }
 }
 
@@ -100,3 +99,34 @@ impl PaintableWidget for Line {
     }
 }
 
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    fn strings_of(line: &Line) -> Vec<&str> {
+        line.texts.iter().map(|t| &*t.text as &str).collect()
+    }
+
+    #[test]
+    fn draw_text() {
+        let mut line = Line::new(10);
+
+        assert_eq!(strings_of(&line), vec!["          "]);
+
+        line.draw_text_at(1, &StyledText::new(Style::default(), "a".to_string()));
+
+        assert_eq!(strings_of(&line), vec![" ", "a", "        "]);
+        
+        line.draw_text_at(0, &StyledText::new(Style::default(), "xxx".to_string()));
+
+        assert_eq!(strings_of(&line), vec!["xxx", "       "]);
+
+        // chop off anything that extends past the end of the line
+        line.draw_text_at(9, &StyledText::new(Style::default(), "123".to_string()));
+        assert_eq!(strings_of(&line), vec!["xxx", "      ", "1"]);
+
+
+        line.draw_text_at(12, &StyledText::new(Style::default(), "123".to_string()));
+        assert_eq!(strings_of(&line), vec!["xxx", "      ", "1"]);
+    }
+}
