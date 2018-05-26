@@ -48,8 +48,9 @@ fn width_slice(txt: &str, a: usize, b: usize) -> &str {
         return "";
     }
 
-    //println!("\rwidth_slice: {:?}[{}..{}] : {}..{}", txt, a, b, start_index, end_index);
-    // txt.get(start_index..end_index).unwrap()
+    // start_index and end_index are set using char_indices, so this should
+    // be safe. If a problem is suspected, this will panic instead:
+    //   txt.get(start_index..end_index).unwrap()
     unsafe { txt.get_unchecked(start_index..end_index) }
 }
 
@@ -76,16 +77,12 @@ impl StyledText {
             std::ops::Bound::Excluded(i) => *i,
             std::ops::Bound::Unbounded => self.width as _,
         };
-        //let n = StyledText::new(self.style, width_slice(&self.text, a, b).to_string());
         let sliced = width_slice(&self.text, a, b).to_string();
-        let n = StyledText {
+        StyledText {
             style: self.style,
             text: Rc::new(sliced),
             width: (b - a) as u32,
-        };
-            
-        //println!("\n\rStyledText::slice: {}..{}  {:?}", a, b, n);
-        n
+        }
     }
 }
 
