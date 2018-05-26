@@ -8,7 +8,8 @@ use std::rc::Rc;
 
 use unicode_width::{UnicodeWidthStr, UnicodeWidthChar};
 
-
+/// StyledText represents a span of text that all has the same style. It also
+/// keeps track of the unicode width of the text.
 #[derive(Debug, Clone)]
 pub struct StyledText {
     pub(crate) style: Style,
@@ -55,10 +56,8 @@ fn width_slice(txt: &str, a: usize, b: usize) -> &str {
 }
 
 impl StyledText {
-    /// StyledText must not have a text length of 0. If you try it will panic.
+    /// Create a new StyledText.
     pub fn new(style: Style, text: String) -> StyledText {
-        if text.len() == 0 { panic!("Zero width StyledText"); }
-
         let width = UnicodeWidthStr::width(&text as &str);
         StyledText { style, text: Rc::new(text), width: width as _ }
     }
@@ -106,8 +105,7 @@ mod test {
     use std::clone::Clone;
 
     #[test]
-    #[should_panic]
-    fn no_empty_styledtext() {
+    fn empty_styledtext() {
         StyledText::new(Style::default(), "".to_string());
     }
 
