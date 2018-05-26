@@ -1,7 +1,8 @@
-#![feature(collections_range, iterator_flatten, specialization, try_from)]
+#![feature(collections_range)]
 
 #[macro_use]
 extern crate bitfield;
+extern crate itertools;
 extern crate termion;
 extern crate unicode_width;
 
