@@ -1,11 +1,10 @@
-
 use std;
 use termion;
 
-use termrect::{RawPaintable, HasSize};
+use std::io::Write;
 use style::Style;
 use styledtext::StyledText;
-use std::io::Write;
+use termrect::{HasSize, RawPaintable};
 
 pub struct Terminal<W: Write> {
     size: (u32, u32),
@@ -36,7 +35,12 @@ impl<W: Write> HasSize for Terminal<W> {
 
 impl<W: Write> RawPaintable for Terminal<W> {
     fn draw_text_at(&mut self, pos: (u32, u32), text: &StyledText) {
-        write!(self.w, "{}{}{}", termion::cursor::Goto(1 + pos.0 as u16, 1 + pos.1 as u16), text.style, text.text).unwrap();
+        write!(
+            self.w,
+            "{}{}{}",
+            termion::cursor::Goto(1 + pos.0 as u16, 1 + pos.1 as u16),
+            text.style,
+            text.text
+        ).unwrap();
     }
 }
-

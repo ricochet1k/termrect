@@ -1,9 +1,7 @@
-
 use std;
 use std::fmt::{Display, Formatter};
 
 use termion;
-
 
 #[derive(Debug, Copy, Clone)]
 pub enum Color {
@@ -67,7 +65,6 @@ impl StyleAttr {
     }
 }
 
-
 #[derive(Debug, Copy, Clone)]
 pub struct Style {
     fg: Color,
@@ -77,7 +74,7 @@ pub struct Style {
 
 impl Style {
     pub fn set_fg(&self, c: Color) -> Style {
-        Style{
+        Style {
             fg: c,
             bg: self.bg,
             attrs: self.attrs,
@@ -85,7 +82,7 @@ impl Style {
     }
 
     pub fn set_bg(&self, c: Color) -> Style {
-        Style{
+        Style {
             fg: self.fg,
             bg: c,
             attrs: self.attrs,
@@ -142,13 +139,24 @@ impl Display for Style {
         self.fg.termion_color().write_fg(f)?;
         self.bg.termion_color().write_bg(f)?;
         write!(f, "{}", termion::style::Reset)?;
-        if self.attrs.bold() { write!(f, "{}", termion::style::Bold)? }
-        if self.attrs.italic() { write!(f, "{}", termion::style::Italic)? }
-        if self.attrs.faint() { write!(f, "{}", termion::style::Faint)? }
-        if self.attrs.framed() { write!(f, "{}", termion::style::Framed)? }
-        if self.attrs.invert() { write!(f, "{}", termion::style::Invert)? }
-        if self.attrs.underline() { write!(f, "{}", termion::style::Underline)? }
+        if self.attrs.bold() {
+            write!(f, "{}", termion::style::Bold)?
+        }
+        if self.attrs.italic() {
+            write!(f, "{}", termion::style::Italic)?
+        }
+        if self.attrs.faint() {
+            write!(f, "{}", termion::style::Faint)?
+        }
+        if self.attrs.framed() {
+            write!(f, "{}", termion::style::Framed)?
+        }
+        if self.attrs.invert() {
+            write!(f, "{}", termion::style::Invert)?
+        }
+        if self.attrs.underline() {
+            write!(f, "{}", termion::style::Underline)?
+        }
         Ok(())
     }
 }
-

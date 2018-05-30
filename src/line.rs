@@ -1,9 +1,9 @@
 use std::rc::Rc;
 
 use itertools::flatten;
-use termrect::{RawPaintable, PaintableWidget, HasSize};
 use style::Style;
 use styledtext::StyledText;
+use termrect::{HasSize, PaintableWidget, RawPaintable};
 
 #[derive(Debug, Clone)]
 pub(crate) struct Line {
@@ -14,13 +14,11 @@ pub(crate) struct Line {
 impl Line {
     pub fn new(width: u32) -> Line {
         Line {
-            texts: vec![
-                StyledText {
-                    style: Style::default(),
-                    text: Rc::new(" ".repeat(width as usize)),
-                    width: width,
-                }
-            ],
+            texts: vec![StyledText {
+                style: Style::default(),
+                text: Rc::new(" ".repeat(width as usize)),
+                width: width,
+            }],
         }
     }
 }
@@ -34,7 +32,7 @@ impl Line {
         let mut start_found = false;
         let mut start_sliced = None;
         let mut start_index = 0;
-        let mut end_index = self.texts.len()-1;
+        let mut end_index = self.texts.len() - 1;
         let mut end_sliced = None;
         for (i, t) in self.texts.iter().enumerate() {
             t_column = t_end;
@@ -43,7 +41,7 @@ impl Line {
                 if t_end > x {
                     start_index = i;
                     if t_column < x {
-                        start_sliced = Some(t.slice(..(x as usize)-(t_column as usize)));
+                        start_sliced = Some(t.slice(..(x as usize) - (t_column as usize)));
                     }
                     start_found = true;
                 }
@@ -52,7 +50,7 @@ impl Line {
                 if t_end >= txt_end {
                     end_index = i;
                     if txt_end < t_end {
-                        end_sliced = Some(t.slice((txt_end as usize)-(t_column as usize)..));
+                        end_sliced = Some(t.slice((txt_end as usize) - (t_column as usize)..));
                     }
                     break;
                 }
@@ -60,7 +58,9 @@ impl Line {
         }
 
         // start is out of bounds
-        if !start_found { return }
+        if !start_found {
+            return;
+        }
 
         let text = if end_index == self.texts.len() - 1 && txt_end > t_end {
             txt.slice(..(txt.width - (txt_end - t_end)) as usize)
@@ -68,11 +68,10 @@ impl Line {
             txt.clone()
         };
 
-
         let repl = [start_sliced, Some(text), end_sliced];
         let repl = flatten(repl.iter()).cloned();
 
-        self.texts.splice(start_index..end_index+1, repl);
+        self.texts.splice(start_index..end_index + 1, repl);
     }
 }
 
@@ -116,7 +115,7 @@ mod test {
         line.draw_text_at(1, &StyledText::new(Style::default(), "a".to_string()));
 
         assert_eq!(strings_of(&line), vec![" ", "a", "        "]);
-        
+
         line.draw_text_at(0, &StyledText::new(Style::default(), "xxx".to_string()));
 
         assert_eq!(strings_of(&line), vec!["xxx", "       "]);
@@ -124,7 +123,6 @@ mod test {
         // chop off anything that extends past the end of the line
         line.draw_text_at(9, &StyledText::new(Style::default(), "123".to_string()));
         assert_eq!(strings_of(&line), vec!["xxx", "      ", "1"]);
-
 
         line.draw_text_at(12, &StyledText::new(Style::default(), "123".to_string()));
         assert_eq!(strings_of(&line), vec!["xxx", "      ", "1"]);

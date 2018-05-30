@@ -1,12 +1,11 @@
-
-use termrect::{RawPaintable, PaintableWidget, HasSize};
 use style::Style;
+use termrect::{HasSize, PaintableWidget, RawPaintable};
 
 use std;
 use std::ops::RangeBounds;
 use std::rc::Rc;
 
-use unicode_width::{UnicodeWidthStr, UnicodeWidthChar};
+use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
 
 /// StyledText represents a span of text that all has the same style. It also
 /// keeps track of the unicode width of the text.
@@ -28,8 +27,7 @@ fn width_slice(txt: &str, a: usize, b: usize) -> &str {
             if width_so_far >= a {
                 start_index = i;
                 found_start = true;
-            }
-            else if width_so_far > a {
+            } else if width_so_far > a {
                 //panic!("Slice in the middle of a double-width char!");
                 start_index = i;
                 found_start = true;
@@ -59,20 +57,27 @@ impl StyledText {
     /// Create a new StyledText.
     pub fn new(style: Style, text: String) -> StyledText {
         let width = UnicodeWidthStr::width(&text as &str);
-        StyledText { style, text: Rc::new(text), width: width as _ }
+        StyledText {
+            style,
+            text: Rc::new(text),
+            width: width as _,
+        }
     }
 
     /// Slice the string returning a new StyledText with the same style. Slicing is done by
     /// width, rather than by byte or by char. So the returned slice should have exactly the
     /// width specified.
-    pub fn slice<R: RangeBounds<usize>>(&self, r: R) -> StyledText where String: std::ops::Index<R> {
+    pub fn slice<R: RangeBounds<usize>>(&self, r: R) -> StyledText
+    where
+        String: std::ops::Index<R>,
+    {
         let a = match r.start() {
             std::ops::Bound::Included(i) => *i,
-            std::ops::Bound::Excluded(i) => i+1,
+            std::ops::Bound::Excluded(i) => i + 1,
             std::ops::Bound::Unbounded => 0,
         };
         let b = match r.end() {
-            std::ops::Bound::Included(i) => *i+1,
+            std::ops::Bound::Included(i) => *i + 1,
             std::ops::Bound::Excluded(i) => *i,
             std::ops::Bound::Unbounded => self.width as _,
         };
@@ -97,24 +102,32 @@ impl PaintableWidget for StyledText {
     }
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;
-    use std::fmt::Debug;
     use std::clone::Clone;
+    use std::fmt::Debug;
 
     #[test]
     fn empty_styledtext() {
         StyledText::new(Style::default(), "".to_string());
     }
 
-    fn slice_test<R: RangeBounds<usize> + Clone + Debug>(s: &str, r: R, sl: &str, w: u32) where String: std::ops::Index<R> {
+    fn slice_test<R: RangeBounds<usize> + Clone + Debug>(s: &str, r: R, sl: &str, w: u32)
+    where
+        String: std::ops::Index<R>,
+    {
         let slice = StyledText::new(Style::default(), s.to_string()).slice(r.clone());
-        assert_eq!(*slice.text, sl,
-                  "Slice str is incorrect: want: {:?}, got {:?}", sl, slice.text);
-        assert_eq!(slice.width, w,
-                  "Slice width is incorrect: {:?}.slice({:?}) width is {}, wanted {}", s, r, slice.width, w);
+        assert_eq!(
+            *slice.text, sl,
+            "Slice str is incorrect: want: {:?}, got {:?}",
+            sl, slice.text
+        );
+        assert_eq!(
+            slice.width, w,
+            "Slice width is incorrect: {:?}.slice({:?}) width is {}, wanted {}",
+            s, r, slice.width, w
+        );
     }
 
     #[test]
