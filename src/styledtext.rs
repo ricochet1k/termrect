@@ -71,12 +71,12 @@ impl StyledText {
     where
         String: std::ops::Index<R>,
     {
-        let a = match r.start() {
+        let a = match r.start_bound() {
             std::ops::Bound::Included(i) => *i,
             std::ops::Bound::Excluded(i) => i + 1,
             std::ops::Bound::Unbounded => 0,
         };
-        let b = match r.end() {
+        let b = match r.end_bound() {
             std::ops::Bound::Included(i) => *i + 1,
             std::ops::Bound::Excluded(i) => *i,
             std::ops::Bound::Unbounded => self.width as _,
