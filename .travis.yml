@@ -11,7 +11,7 @@ before_script:
   - cargo +nightly install rustfmt-nightly --force
 
 script:
-  - cargo test
+  - cargo +nightly test
   - cargo +nightly clippy
   - cargo +nightly fmt -- --write-mode diff
 
