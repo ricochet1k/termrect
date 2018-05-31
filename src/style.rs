@@ -31,6 +31,7 @@ bitfield!{
     underline, set_underline: 5;
 }
 
+#[derive(Copy, Clone)]
 pub enum StyleAttr {
     Bold,
     Italic,

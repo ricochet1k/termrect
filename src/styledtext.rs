@@ -22,21 +22,16 @@ fn width_slice(txt: &str, a: usize, b: usize) -> &str {
     let mut start_index = 0;
     let mut end_index = txt.len();
     for (i, c) in txt.char_indices() {
-        if !found_start {
-            if width_so_far >= a {
-                start_index = i;
-                found_start = true;
-            } else if width_so_far > a {
+        if !found_start && width_so_far >= a {
+            //if width_so_far > a {
                 //panic!("Slice in the middle of a double-width char!");
-                start_index = i;
-                found_start = true;
-            }
+            //}
+            start_index = i;
+            found_start = true;
         }
-        if found_start {
-            if width_so_far >= b {
-                end_index = i;
-                break;
-            }
+        if found_start && width_so_far >= b {
+            end_index = i;
+            break;
         }
 
         width_so_far += UnicodeWidthChar::width(c).unwrap_or(0);

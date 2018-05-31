@@ -17,7 +17,7 @@ impl Line {
             texts: vec![StyledText {
                 style: Style::default(),
                 text: Rc::new(" ".repeat(width as usize)),
-                width: width,
+                width,
             }],
         }
     }
@@ -37,23 +37,19 @@ impl Line {
         for (i, t) in self.texts.iter().enumerate() {
             t_column = t_end;
             t_end = t_column + t.width;
-            if !start_found {
-                if t_end > x {
-                    start_index = i;
-                    if t_column < x {
-                        start_sliced = Some(t.slice(..(x as usize) - (t_column as usize)));
-                    }
-                    start_found = true;
+            if !start_found && t_end > x {
+                start_index = i;
+                if t_column < x {
+                    start_sliced = Some(t.slice(..(x as usize) - (t_column as usize)));
                 }
+                start_found = true;
             }
-            if start_found {
-                if t_end >= txt_end {
-                    end_index = i;
-                    if txt_end < t_end {
-                        end_sliced = Some(t.slice((txt_end as usize) - (t_column as usize)..));
-                    }
-                    break;
+            if start_found && t_end >= txt_end {
+                end_index = i;
+                if txt_end < t_end {
+                    end_sliced = Some(t.slice((txt_end as usize) - (t_column as usize)..));
                 }
+                break;
             }
         }
 
@@ -84,14 +80,14 @@ impl HasSize for Line {
 impl PaintableWidget for Line {
     fn draw_into<R: RawPaintable>(&self, target: &mut R, pos: (u32, u32)) {
         let mut width_so_far = 0;
-        for t in self.texts.iter() {
+        for t in &self.texts {
             t.draw_into(target, (pos.0 + width_so_far, pos.1));
             width_so_far += t.width;
         }
     }
     fn draw_delta_into<R: RawPaintable>(&mut self, target: &mut R, (x, y): (u32, u32)) {
         let mut width_so_far = 0;
-        for t in self.texts.iter_mut() {
+        for t in &mut self.texts {
             t.draw_delta_into(target, (x + width_so_far, y));
             width_so_far += t.width;
         }
