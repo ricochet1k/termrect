@@ -1,6 +1,5 @@
 use std;
 use std::fmt::{Display, Formatter};
-
 use termion;
 
 #[derive(Debug, Copy, Clone)]

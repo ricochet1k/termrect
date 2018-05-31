@@ -1,8 +1,8 @@
-use std::rc::Rc;
-
 use style::Style;
 use styledtext::StyledText;
 use termrect::{HasSize, PaintableWidget, RawPaintable};
+
+use std::rc::Rc;
 
 #[derive(Debug, Clone)]
 pub(crate) struct Line {
@@ -26,7 +26,7 @@ impl Line {
     pub(crate) fn draw_text_at(&mut self, x: u32, txt: &StyledText) {
         let txt_end = x + txt.width;
 
-        let mut t_column = 0;
+        let mut t_column;
         let mut t_end = 0;
         let mut start_found = false;
         let mut start_sliced = None;
