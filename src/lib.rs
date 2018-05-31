@@ -14,12 +14,3 @@ pub mod termrect;
 
 pub use style::{Color, Style, StyleAttr};
 pub use terminal::Terminal;
-pub use termrect::{HasSize, HasTermRect, PaintableWidget, RawPaintable, TermRect};
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}

@@ -13,4 +13,3 @@ bitfield = "0.13"
 itertools = "0.7.8"
 termion = "^1.5.1"
 unicode-width = "~0"
-

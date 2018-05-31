@@ -4,7 +4,6 @@ use termrect::{HasSize, PaintableWidget, RawPaintable};
 use std;
 use std::ops::RangeBounds;
 use std::rc::Rc;
-
 use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
 
 /// StyledText represents a span of text that all has the same style. It also
@@ -71,12 +70,12 @@ impl StyledText {
     where
         String: std::ops::Index<R>,
     {
-        let a = match r.start() {
+        let a = match r.start_bound() {
             std::ops::Bound::Included(i) => *i,
             std::ops::Bound::Excluded(i) => i + 1,
             std::ops::Bound::Unbounded => 0,
         };
-        let b = match r.end() {
+        let b = match r.end_bound() {
             std::ops::Bound::Included(i) => *i + 1,
             std::ops::Bound::Excluded(i) => *i,
             std::ops::Bound::Unbounded => self.width as _,
@@ -150,5 +149,4 @@ mod test {
         slice_test("ＱＲＳ12", .., "ＱＲＳ12", 8);
         slice_test("ｱｲｳ1234", .., "ｱｲｳ1234", 7); // 3 single-width chars
     }
-
 }
