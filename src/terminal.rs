@@ -7,14 +7,17 @@ use termrect::{HasSize, RawPaintable};
 
 pub struct Terminal<W: Write> {
     size: (u32, u32),
+    current_style: Style,
     w: W,
 }
 
 impl<W: Write> Terminal<W> {
     pub fn new(mut w: W, size: (u32, u32)) -> Terminal<W> {
-        write!(w, "{}", Style::default()).unwrap();
+        let current_style = Style::default();
+        write!(w, "{}", current_style).unwrap();
         Terminal {
             size,
+            current_style,
             w,
         }
     }
