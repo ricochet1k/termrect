@@ -1,3 +1,4 @@
+use itertools::flatten;
 use style::Style;
 use styledtext::StyledText;
 use termrect::{HasSize, PaintableWidget, RawPaintable};
@@ -68,7 +69,7 @@ impl Line {
         };
 
         let repl = [start_sliced, Some(text), end_sliced];
-        let repl = repl.iter().flatten().cloned();
+        let repl = flatten(repl.iter()).cloned();
 
         self.texts.splice(start_index..end_index + 1, repl);
     }
