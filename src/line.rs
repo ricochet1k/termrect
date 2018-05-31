@@ -1,8 +1,8 @@
-use std::rc::Rc;
-
 use style::Style;
 use styledtext::StyledText;
 use termrect::{HasSize, PaintableWidget, RawPaintable};
+
+use std::rc::Rc;
 
 #[derive(Debug, Clone)]
 pub(crate) struct Line {

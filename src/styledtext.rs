@@ -4,7 +4,6 @@ use termrect::{HasSize, PaintableWidget, RawPaintable};
 use std;
 use std::ops::RangeBounds;
 use std::rc::Rc;
-
 use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
 
 /// StyledText represents a span of text that all has the same style. It also
