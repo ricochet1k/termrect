@@ -1,9 +1,11 @@
-# TermRect &emsp; [![Latest Version]][crates.io] [![Docs Badge]][docs.rs]
+# TermRect &emsp; [![Latest Version]][crates.io] [![Docs Badge]][docs.rs] [![Build Status]][travis-ci.org]
 
 [Latest Version]: https://img.shields.io/crates/v/termrect.svg
 [crates.io]: https://crates.io/crates/termrect
 [Docs Badge]: https://docs.rs/termrect/badge.svg
 [docs.rs]: https://docs.rs/termrect/
+[Travis Badge]: https://travis-ci.org/ricochet1k/termrect.svg?branch=master
+[travis-ci.org]: https://travis-ci.org/ricochet1k/termrect
 
 **TermRect is a cross-platform representation of a rectangle of characters on a terminal.**
 
