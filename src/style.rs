@@ -1,8 +1,7 @@
-use std;
-use std::fmt::{Display, Formatter};
+use std::fmt::{Display, Error, Formatter};
 use termion;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum Color {
     Default,
     Indexed(u16),
@@ -20,13 +19,13 @@ impl Color {
 }
 
 bitfield!{
-    #[derive(Copy, Clone)]
+    #[derive(Copy, Clone, PartialEq, Eq)]
     pub struct StyleAttrs(u16);
     impl Debug;
     bold, set_bold: 0;
     italic, set_italic: 1;
     faint, set_faint: 2;
-    framed, set_framed: 3;
+    crossedout, set_crossedout: 3;
     invert, set_invert: 4;
     underline, set_underline: 5;
 }
@@ -36,7 +35,7 @@ pub enum StyleAttr {
     Bold,
     Italic,
     Faint,
-    Framed,
+    CrossedOut,
     Invert,
     Underline,
 }
@@ -47,7 +46,7 @@ impl StyleAttr {
             StyleAttr::Bold => attrs.bold(),
             StyleAttr::Italic => attrs.italic(),
             StyleAttr::Faint => attrs.faint(),
-            StyleAttr::Framed => attrs.framed(),
+            StyleAttr::CrossedOut => attrs.crossedout(),
             StyleAttr::Invert => attrs.invert(),
             StyleAttr::Underline => attrs.underline(),
         }
@@ -58,14 +57,14 @@ impl StyleAttr {
             StyleAttr::Bold => attrs.set_bold(to),
             StyleAttr::Italic => attrs.set_italic(to),
             StyleAttr::Faint => attrs.set_faint(to),
-            StyleAttr::Framed => attrs.set_framed(to),
+            StyleAttr::CrossedOut => attrs.set_crossedout(to),
             StyleAttr::Invert => attrs.set_invert(to),
             StyleAttr::Underline => attrs.set_underline(to),
         }
     }
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct Style {
     fg: Color,
     bg: Color,
@@ -135,7 +134,7 @@ impl Default for Style {
 }
 
 impl Display for Style {
-    fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         self.fg.termion_color().write_fg(f)?;
         self.bg.termion_color().write_bg(f)?;
         write!(f, "{}", termion::style::Reset)?;
@@ -148,8 +147,8 @@ impl Display for Style {
         if self.attrs.faint() {
             write!(f, "{}", termion::style::Faint)?
         }
-        if self.attrs.framed() {
-            write!(f, "{}", termion::style::Framed)?
+        if self.attrs.crossedout() {
+            write!(f, "{}", termion::style::CrossedOut)?
         }
         if self.attrs.invert() {
             write!(f, "{}", termion::style::Invert)?
@@ -157,6 +156,80 @@ impl Display for Style {
         if self.attrs.underline() {
             write!(f, "{}", termion::style::Underline)?
         }
+        Ok(())
+    }
+}
+
+pub(crate) struct StyleFromTo {
+    pub(crate) from: Style,
+    pub(crate) to: Style,
+}
+
+fn write_attr<S: Display, R: Display>(
+    f: &mut Formatter,
+    fromattr: bool,
+    toattr: bool,
+    set: S,
+    reset: R,
+) -> Result<(), Error> {
+    if fromattr && !toattr {
+        write!(f, "{}", reset)?;
+    } else if !fromattr && toattr {
+        write!(f, "{}", set)?;
+    }
+    Ok(())
+}
+
+impl Display for StyleFromTo {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
+        if self.from.fg != self.to.fg {
+            self.to.fg.termion_color().write_fg(f)?;
+        }
+        if self.from.bg != self.to.bg {
+            self.to.bg.termion_color().write_bg(f)?;
+        }
+        write_attr(
+            f,
+            self.from.attrs.bold(),
+            self.to.attrs.bold(),
+            termion::style::Bold,
+            termion::style::NoBold,
+        )?;
+        write_attr(
+            f,
+            self.from.attrs.italic(),
+            self.to.attrs.italic(),
+            termion::style::Italic,
+            termion::style::NoItalic,
+        )?;
+        write_attr(
+            f,
+            self.from.attrs.faint(),
+            self.to.attrs.faint(),
+            termion::style::Faint,
+            termion::style::NoFaint,
+        )?;
+        write_attr(
+            f,
+            self.from.attrs.crossedout(),
+            self.to.attrs.crossedout(),
+            termion::style::CrossedOut,
+            termion::style::NoCrossedOut,
+        )?;
+        write_attr(
+            f,
+            self.from.attrs.invert(),
+            self.to.attrs.invert(),
+            termion::style::Invert,
+            termion::style::NoInvert,
+        )?;
+        write_attr(
+            f,
+            self.from.attrs.underline(),
+            self.to.attrs.underline(),
+            termion::style::Underline,
+            termion::style::NoUnderline,
+        )?;
         Ok(())
     }
 }

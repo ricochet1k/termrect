@@ -1,4 +1,4 @@
-use style::Style;
+use style::{Style, StyleFromTo};
 use styledtext::StyledText;
 use termrect::{HasSize, RawPaintable};
 
@@ -35,12 +35,23 @@ impl<W: Write> HasSize for Terminal<W> {
 
 impl<W: Write> RawPaintable for Terminal<W> {
     fn draw_text_at(&mut self, pos: (u32, u32), text: &StyledText) {
+        // TODO: Track cursor position and only move if necessary
         write!(
             self.w,
-            "{}{}{}",
-            termion::cursor::Goto(1 + pos.0 as u16, 1 + pos.1 as u16),
-            text.style,
-            text.text
+            "{}",
+            termion::cursor::Goto(1 + pos.0 as u16, 1 + pos.1 as u16)
         ).unwrap();
+        if self.current_style != text.style {
+            write!(
+                self.w,
+                "{}",
+                StyleFromTo {
+                    from: self.current_style,
+                    to: text.style
+                }
+            ).unwrap();
+            self.current_style = text.style;
+        }
+        write!(self.w, "{}", text.text).unwrap();
     }
 }

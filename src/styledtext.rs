@@ -24,7 +24,7 @@ fn width_slice(txt: &str, a: usize, b: usize) -> &str {
     for (i, c) in txt.char_indices() {
         if !found_start && width_so_far >= a {
             //if width_so_far > a {
-                //panic!("Slice in the middle of a double-width char!");
+            //panic!("Slice in the middle of a double-width char!");
             //}
             start_index = i;
             found_start = true;
