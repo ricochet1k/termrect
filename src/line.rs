@@ -1,3 +1,4 @@
+use delta::{Delta, Delta::*};
 use itertools::flatten;
 use style::Style;
 use styledtext::StyledText;
@@ -9,6 +10,8 @@ use std::rc::Rc;
 pub(crate) struct Line {
     // There are no gaps between these.
     texts: Vec<StyledText>,
+
+    delta: Delta,
 }
 
 impl Line {
@@ -19,12 +22,14 @@ impl Line {
                 text: Rc::new(" ".repeat(width as usize)),
                 width,
             }],
+            // TODO: Should this be Range(0, 1) instead?
+            delta: Unchanged,
         }
     }
 }
 
 impl Line {
-    pub(crate) fn draw_text_at(&mut self, x: u32, txt: &StyledText) {
+    pub(crate) fn draw_text_at(&mut self, x: u32, txt: &StyledText) -> bool {
         let txt_end = x + txt.width;
 
         let mut t_column;
@@ -55,7 +60,7 @@ impl Line {
 
         // start is out of bounds
         if !start_found {
-            return;
+            return false;
         }
 
         let text = if end_index == self.texts.len() - 1 && txt_end > t_end {
@@ -68,6 +73,10 @@ impl Line {
         let repl = flatten(repl.iter()).cloned();
 
         self.texts.splice(start_index..end_index + 1, repl);
+        self.delta
+            .add_range(start_index as u32..end_index as u32 + 1);
+
+        true
     }
 }
 
@@ -87,10 +96,13 @@ impl PaintableWidget for Line {
     }
     fn draw_delta_into<R: RawPaintable>(&mut self, target: &mut R, (x, y): (u32, u32)) {
         let mut width_so_far = 0;
-        for t in &mut self.texts {
-            t.draw_delta_into(target, (x + width_so_far, y));
+        for (i, t) in &mut self.texts.iter_mut().enumerate() {
+            if self.delta.contains(i as u32) {
+                t.draw_delta_into(target, (x + width_so_far, y));
+            }
             width_so_far += t.width;
         }
+        self.delta = Unchanged;
     }
 }
 

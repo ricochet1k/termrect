@@ -6,6 +6,7 @@ extern crate itertools;
 extern crate termion;
 extern crate unicode_width;
 
+pub mod delta;
 pub mod line;
 pub mod style;
 pub mod styledtext;

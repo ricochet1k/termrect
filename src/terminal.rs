@@ -34,7 +34,7 @@ impl<W: Write> HasSize for Terminal<W> {
 }
 
 impl<W: Write> RawPaintable for Terminal<W> {
-    fn draw_text_at(&mut self, pos: (u32, u32), text: &StyledText) {
+    fn draw_text_at(&mut self, pos: (u32, u32), text: &StyledText) -> bool {
         // TODO: Track cursor position and only move if necessary
         write!(
             self.w,
@@ -53,5 +53,6 @@ impl<W: Write> RawPaintable for Terminal<W> {
             self.current_style = text.style;
         }
         write!(self.w, "{}", text.text).unwrap();
+        true
     }
 }

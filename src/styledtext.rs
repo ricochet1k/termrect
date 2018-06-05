@@ -92,7 +92,7 @@ impl HasSize for StyledText {
 
 impl PaintableWidget for StyledText {
     fn draw_into<R: RawPaintable>(&self, target: &mut R, pos: (u32, u32)) {
-        target.draw_text_at(pos, &self)
+        target.draw_text_at(pos, &self);
     }
 }
 
