@@ -4,6 +4,12 @@ cache: cargo
 
 rust:
   - nightly-2018-05-30
+  - nightly
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - rust: nightly
 
 before_script:
   - cargo install clippy --force
@@ -20,3 +26,4 @@ git:
 notifications:
   email:
     on_success: never
+

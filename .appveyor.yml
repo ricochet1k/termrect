@@ -1,3 +1,8 @@
+matrix:
+  fast_finish: true
+  allow_failures:
+    - CHANNEL: nightly
+
 environment:
   matrix:
     - TARGET: i686-pc-windows-gnu
@@ -8,6 +13,15 @@ environment:
       CHANNEL: nightly-2018-05-30
     - TARGET: x86_64-pc-windows-msvc
       CHANNEL: nightly-2018-05-30
+
+    - TARGET: i686-pc-windows-gnu
+      CHANNEL: nightly
+    - TARGET: i686-pc-windows-msvc
+      CHANNEL: nightly
+    - TARGET: x86_64-pc-windows-gnu
+      CHANNEL: nightly
+    - TARGET: x86_64-pc-windows-msvc
+      CHANNEL: nightly
 
 install:
   - curl -sSf -o rustup-init.exe https://win.rustup.rs
@@ -36,3 +50,4 @@ branches:
 cache:
   - target
   - C:\Users\appveyor\.cargo\registry
+
