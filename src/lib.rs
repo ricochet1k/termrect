@@ -1,5 +1,3 @@
-#![feature(collections_range)]
-
 #[macro_use]
 extern crate bitfield;
 extern crate itertools;
