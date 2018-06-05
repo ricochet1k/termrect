@@ -2,7 +2,7 @@ use style::Style;
 use termrect::{HasSize, PaintableWidget, RawPaintable};
 
 use std;
-use std::ops::RangeBounds;
+use std::ops::{Bound, RangeBounds};
 use std::rc::Rc;
 use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
 
@@ -66,14 +66,14 @@ impl StyledText {
         String: std::ops::Index<R>,
     {
         let a = match r.start_bound() {
-            std::ops::Bound::Included(i) => *i,
-            std::ops::Bound::Excluded(i) => i + 1,
-            std::ops::Bound::Unbounded => 0,
+            Bound::Included(i) => *i,
+            Bound::Excluded(i) => i + 1,
+            Bound::Unbounded => 0,
         };
         let b = match r.end_bound() {
-            std::ops::Bound::Included(i) => *i + 1,
-            std::ops::Bound::Excluded(i) => *i,
-            std::ops::Bound::Unbounded => self.width as _,
+            Bound::Included(i) => *i + 1,
+            Bound::Excluded(i) => *i,
+            Bound::Unbounded => self.width as _,
         };
         let sliced = width_slice(&self.text, a, b).to_string();
         StyledText {
