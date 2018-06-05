@@ -4,9 +4,11 @@ version = "0.1.2"
 authors = ["Matt Peterson <ricochet1k@gmail.com>"]
 repository = "https://github.com/ricochet1k/termrect"
 description = "Abstract representation of a styled rectangle of characters"
+documentation = "https://docs.rs/termrect"
 license = "MIT"
 keywords = ["terminal", "tui"]
 readme = "README.md"
+exclude = ["Cargo.lock"]
 
 [dependencies]
 bitfield = "0.13"
