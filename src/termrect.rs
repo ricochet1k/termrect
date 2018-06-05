@@ -71,8 +71,14 @@ pub trait PaintableWidget: HasSize {
 
 impl RawPaintable for TermRect {
     fn draw_text_at(&mut self, pos: (u32, u32), text: &StyledText) -> bool {
-        if pos.1 < self.size.1 && (pos.1 as usize) < self.lines.len() {
-            self.lines[pos.1 as usize].draw_text_at(pos.0, text)
+        let y = pos.1 as usize;
+        if pos.1 < self.size.1 && y < self.lines.len() {
+            if self.lines[y].draw_text_at(pos.0, text) {
+                self.delta.add(y);
+                true
+            } else {
+                false
+            }
         } else {
             false
         }
@@ -93,7 +99,7 @@ impl PaintableWidget for TermRect {
     }
     fn draw_delta_into<R: RawPaintable>(&mut self, target: &mut R, pos: (u32, u32)) {
         for (i, l) in self.lines.iter_mut().enumerate() {
-            if self.delta.contains(i as u32) {
+            if self.delta.contains(i) {
                 l.draw_delta_into(target, (pos.0, pos.1 + i as u32));
             }
         }
@@ -101,7 +107,7 @@ impl PaintableWidget for TermRect {
     }
 
     fn mark_all_changed(&mut self) {
-        self.delta = Range(0, self.size.1);
+        self.delta = Range(0, self.size.1 as usize);
     }
 
     fn mark_none_changed(&mut self) {

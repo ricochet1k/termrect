@@ -14,4 +14,4 @@ pub mod terminal;
 pub mod termrect;
 
 pub use style::{Color, Style, StyleAttr};
-pub use terminal::Terminal;
+pub use termrect::TermRect;

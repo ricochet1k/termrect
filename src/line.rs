@@ -70,11 +70,11 @@ impl Line {
         };
 
         let repl = [start_sliced, Some(text), end_sliced];
-        let repl = flatten(repl.iter()).cloned();
+        let repl: Vec<_> = flatten(repl.iter()).cloned().collect();
 
-        self.texts.splice(start_index..end_index + 1, repl);
-        self.delta
-            .add_range(start_index as u32..end_index as u32 + 1);
+        let r = start_index..end_index + 1;
+        self.delta.add_splice_range(r.clone(), repl.len());
+        self.texts.splice(r, repl);
 
         true
     }
@@ -97,11 +97,19 @@ impl PaintableWidget for Line {
     fn draw_delta_into<R: RawPaintable>(&mut self, target: &mut R, (x, y): (u32, u32)) {
         let mut width_so_far = 0;
         for (i, t) in &mut self.texts.iter_mut().enumerate() {
-            if self.delta.contains(i as u32) {
+            if self.delta.contains(i) {
                 t.draw_delta_into(target, (x + width_so_far, y));
             }
             width_so_far += t.width;
         }
+        self.mark_none_changed();
+    }
+
+    fn mark_all_changed(&mut self) {
+        self.delta = Range(0, self.size().0 as usize);
+    }
+
+    fn mark_none_changed(&mut self) {
         self.delta = Unchanged;
     }
 }
@@ -119,10 +127,12 @@ mod test {
         let mut line = Line::new(10);
 
         assert_eq!(strings_of(&line), vec!["          "]);
+        assert_eq!(line.delta, Unchanged);
 
         line.draw_text_at(1, &StyledText::new(Style::default(), "a".to_string()));
 
         assert_eq!(strings_of(&line), vec![" ", "a", "        "]);
+        assert!(line.delta.contains(1));
 
         line.draw_text_at(0, &StyledText::new(Style::default(), "xxx".to_string()));
 
