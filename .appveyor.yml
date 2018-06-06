@@ -6,13 +6,13 @@ matrix:
 environment:
   matrix:
     - TARGET: i686-pc-windows-gnu
-      CHANNEL: nightly-2018-05-30
+      CHANNEL: nightly-2018-05-31
     - TARGET: i686-pc-windows-msvc
-      CHANNEL: nightly-2018-05-30
+      CHANNEL: nightly-2018-05-31
     - TARGET: x86_64-pc-windows-gnu
-      CHANNEL: nightly-2018-05-30
+      CHANNEL: nightly-2018-05-31
     - TARGET: x86_64-pc-windows-msvc
-      CHANNEL: nightly-2018-05-30
+      CHANNEL: nightly-2018-05-31
 
     - TARGET: i686-pc-windows-gnu
       CHANNEL: nightly
@@ -49,6 +49,6 @@ branches:
     - /^v\d+\.\d+\.\d+.*$/
 
 cache:
-  - target
-  - C:\Users\appveyor\.cargo\registry
+  - target -> .appveyor.yml
+  - C:\Users\appveyor\.cargo\registry -> .appveyor.yml
 
