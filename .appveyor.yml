@@ -40,7 +40,7 @@ shallow_clone: true
 
 test_script:
   - cargo test --no-default-features
-  - cargo clippy --no-default-features
+  - cargo clippy --no-default-features --verbose
   - cargo fmt -- --check
 
 branches:
