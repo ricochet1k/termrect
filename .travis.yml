@@ -18,7 +18,7 @@ before_script:
 script:
   - cargo test
   - cargo clippy
-  - cargo fmt -- --write-mode diff
+  - cargo fmt -- --check
 
 git:
   depth: 1
