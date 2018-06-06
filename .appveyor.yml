@@ -1,6 +1,8 @@
 matrix:
   allow_failures:
     - CHANNEL: nightly
+    - TARGET: i686-pc-windows-gnu
+    - TARGET: i686-pc-windows-msvc
 
 environment:
   matrix:
@@ -48,6 +50,6 @@ branches:
     - /^v\d+\.\d+\.\d+.*$/
 
 cache:
-  - target -> .appveyor.yml
-  - C:\Users\appveyor\.cargo\registry -> .appveyor.yml
+  - target
+  - C:\Users\appveyor\.cargo\registry
 
