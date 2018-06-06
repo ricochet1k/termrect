@@ -38,8 +38,8 @@ before_build:
   - cargo install rustfmt-nightly --force
 
 test_script:
-  - cargo test
-  - cargo clippy
+  - cargo test --no-default-features
+  - cargo clippy --no-default-features
   - cargo fmt -- --check
 
 branches:
