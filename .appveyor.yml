@@ -27,15 +27,16 @@ install:
   - curl -sSf -o rustup-init.exe https://win.rustup.rs
   - rustup-init.exe --default-host %TARGET% --default-toolchain %CHANNEL% -y
   - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
+  - cargo install clippy --force
+  - cargo install rustfmt-nightly --force
+
   - rustc -Vv
   - cargo -V
+  - cargo clippy -V
+  - cargo fmt --version
 
 build: false
 shallow_clone: true
-
-before_build:
-  - cargo install clippy --force
-  - cargo install rustfmt-nightly --force
 
 test_script:
   - cargo test --no-default-features
