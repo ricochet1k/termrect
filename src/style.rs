@@ -1,4 +1,7 @@
+#[cfg(feature = "termion")]
 use std::fmt::{Display, Error, Formatter};
+
+#[cfg(feature = "termion")]
 use termion;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -9,6 +12,7 @@ pub enum Color {
 }
 
 impl Color {
+    #[cfg(feature = "termion")]
     fn termion_color(&self) -> Box<termion::color::Color> {
         match *self {
             Color::Default => Box::new(termion::color::Reset),
@@ -133,6 +137,7 @@ impl Default for Style {
     }
 }
 
+#[cfg(feature = "termion")]
 impl Display for Style {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         self.fg.termion_color().write_fg(f)?;
@@ -160,11 +165,13 @@ impl Display for Style {
     }
 }
 
+#[cfg(feature = "termion")]
 pub(crate) struct StyleFromTo {
     pub(crate) from: Style,
     pub(crate) to: Style,
 }
 
+#[cfg(feature = "termion")]
 fn write_attr<S: Display, R: Display>(
     f: &mut Formatter,
     fromattr: bool,
@@ -180,6 +187,7 @@ fn write_attr<S: Display, R: Display>(
     Ok(())
 }
 
+#[cfg(feature = "termion")]
 impl Display for StyleFromTo {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         if self.from.fg != self.to.fg {

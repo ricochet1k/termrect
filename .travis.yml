@@ -3,17 +3,22 @@ language: rust
 cache: cargo
 
 rust:
+  - nightly-2018-05-30
   - nightly
 
+matrix:
+  fast_finish: true
+  allow_failures:
+    - rust: nightly
+
 before_script:
-  - rustup install nightly
-  - cargo +nightly install clippy --force
-  - cargo +nightly install rustfmt-nightly --force
+  - cargo install clippy --force
+  - cargo install rustfmt-nightly --force
 
 script:
-  - cargo +nightly test
-  - cargo +nightly clippy
-  - cargo +nightly fmt -- --write-mode diff
+  - cargo test
+  - cargo clippy
+  - cargo fmt -- --check
 
 git:
   depth: 1
@@ -21,3 +26,4 @@ git:
 notifications:
   email:
     on_success: never
+

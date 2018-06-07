@@ -13,6 +13,18 @@ exclude = ["Cargo.lock"]
 [dependencies]
 bitfield = "0.13"
 itertools = "0.7.8"
-termion = "^1.5.1"
 unicode-width = "^0.1.5"
+
+termion = { version = "^1.5.1", optional = true }
+
+[features]
+default = ["use-termion"]
+use-termion = ["termion"]
+
+# This doesn't really work yet: https://github.com/rust-lang/cargo/issues/1197
+#[target.'cfg(target_os = "windows")'.features]
+#default = []
+
+#[target.'cfg(not(target_os = "windows"))'.features]
+#default = ["use-termion"]
 

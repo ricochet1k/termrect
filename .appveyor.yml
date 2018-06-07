@@ -1,33 +1,49 @@
+matrix:
+  fast_finish: true
+  allow_failures:
+    - CHANNEL: nightly
+    - TARGET: i686-pc-windows-gnu
+    - TARGET: i686-pc-windows-msvc
+
 environment:
   matrix:
+    - TARGET: x86_64-pc-windows-gnu
+      CHANNEL: nightly-2018-05-31
+    - TARGET: x86_64-pc-windows-msvc
+      CHANNEL: nightly-2018-05-31
     - TARGET: i686-pc-windows-gnu
-      CHANNEL: nightly
+      CHANNEL: nightly-2018-05-31
     - TARGET: i686-pc-windows-msvc
-      CHANNEL: nightly
+      CHANNEL: nightly-2018-05-31
+
     - TARGET: x86_64-pc-windows-gnu
       CHANNEL: nightly
     - TARGET: x86_64-pc-windows-msvc
+      CHANNEL: nightly
+    - TARGET: i686-pc-windows-gnu
+      CHANNEL: nightly
+    - TARGET: i686-pc-windows-msvc
       CHANNEL: nightly
 
 install:
   - curl -sSf -o rustup-init.exe https://win.rustup.rs
   - rustup-init.exe --default-host %TARGET% --default-toolchain %CHANNEL% -y
   - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
+  - cargo install clippy --force
+  - cargo install rustfmt-nightly --force
+
   - rustc -Vv
   - cargo -V
+  - cargo clippy -V
+  - cargo fmt --version
 
 build: false
 shallow_clone: true
 
-before_build:
-  - rustup install nightly
-  - cargo +nightly install clippy --force
-  - cargo +nightly install rustfmt-nightly --force
-
 test_script:
-  - cargo +nightly test
-  - cargo +nightly clippy
-  - cargo +nightly fmt -- --write-mode diff
+  - cargo test --no-default-features
+  - cargo clippy --no-default-features --verbose
+  - cargo fmt -- --check
 
 branches:
   only:
@@ -37,3 +53,4 @@ branches:
 cache:
   - target
   - C:\Users\appveyor\.cargo\registry
+
