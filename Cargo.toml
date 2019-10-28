@@ -12,7 +12,7 @@ exclude = ["Cargo.lock"]
 
 [dependencies]
 bitfield = "0.13"
-itertools = "0.7.8"
+itertools = "0.8.1"
 unicode-width = "^0.1.5"
 
 termion = { version = "^1.5.1", optional = true }
