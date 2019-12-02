@@ -8,13 +8,13 @@ matrix:
 environment:
   matrix:
     - TARGET: x86_64-pc-windows-gnu
-      CHANNEL: nightly-2018-05-31
+      CHANNEL: nightly-2019-11-25
     - TARGET: x86_64-pc-windows-msvc
-      CHANNEL: nightly-2018-05-31
+      CHANNEL: nightly-2019-11-25
     - TARGET: i686-pc-windows-gnu
-      CHANNEL: nightly-2018-05-31
+      CHANNEL: nightly-2019-11-25
     - TARGET: i686-pc-windows-msvc
-      CHANNEL: nightly-2018-05-31
+      CHANNEL: nightly-2019-11-25
 
     - TARGET: x86_64-pc-windows-gnu
       CHANNEL: nightly
@@ -29,8 +29,7 @@ install:
   - curl -sSf -o rustup-init.exe https://win.rustup.rs
   - rustup-init.exe --default-host %TARGET% --default-toolchain %CHANNEL% -y
   - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
-  - cargo install clippy --force
-  - cargo install rustfmt-nightly --force
+  - rustup component add clippy rustfmt
 
   - rustc -Vv
   - cargo -V
