@@ -1,5 +1,4 @@
 use delta::{Delta, Delta::*};
-use itertools::flatten;
 use style::Style;
 use styledtext::StyledText;
 use termrect::{HasSize, PaintableWidget, RawPaintable};
@@ -70,7 +69,7 @@ impl Line {
         };
 
         let repl = [start_sliced, Some(text), end_sliced];
-        let repl: Vec<_> = flatten(repl.iter()).cloned().collect();
+        let repl: Vec<_> = repl.iter().flatten().cloned().collect();
 
         let r = start_index..end_index + 1;
         self.delta.add_splice_range(r.clone(), repl.len());
