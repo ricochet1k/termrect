@@ -13,7 +13,7 @@ pub enum Color {
 
 impl Color {
     #[cfg(feature = "termion")]
-    fn termion_color(&self) -> Box<termion::color::Color> {
+    fn termion_color(&self) -> Box<dyn termion::color::Color> {
         match *self {
             Color::Default => Box::new(termion::color::Reset),
             Color::Indexed(i) => Box::new(termion::color::AnsiValue(i as _)),
