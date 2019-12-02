@@ -40,7 +40,8 @@ impl<W: Write> RawPaintable for Terminal<W> {
             self.w,
             "{}",
             termion::cursor::Goto(1 + pos.0 as u16, 1 + pos.1 as u16)
-        ).unwrap();
+        )
+        .unwrap();
         if self.current_style != text.style {
             write!(
                 self.w,
@@ -49,7 +50,8 @@ impl<W: Write> RawPaintable for Terminal<W> {
                     from: self.current_style,
                     to: text.style
                 }
-            ).unwrap();
+            )
+            .unwrap();
             self.current_style = text.style;
         }
         write!(self.w, "{}", text.text).unwrap();

@@ -22,7 +22,7 @@ impl Color {
     }
 }
 
-bitfield!{
+bitfield! {
     #[derive(Copy, Clone, PartialEq, Eq)]
     pub struct StyleAttrs(u16);
     impl Debug;
