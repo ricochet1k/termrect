@@ -11,7 +11,7 @@ readme = "README.md"
 exclude = ["Cargo.lock"]
 
 [dependencies]
-bitfield = "0.13"
+bitfield = "0.14"
 itertools = "0.10.1"
 unicode-width = "^0.1.5"
 
