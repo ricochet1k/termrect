@@ -15,7 +15,7 @@ bitfield = "0.14"
 itertools = "0.10.1"
 unicode-width = "^0.1.5"
 
-termion = { version = "^1.5.1", optional = true }
+termion = { version = "^2.0.1", optional = true }
 
 [features]
 default = ["use-termion"]
